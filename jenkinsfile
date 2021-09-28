@@ -26,17 +26,18 @@
    agent any
 
    stages {
-      stage('Check the branch') {
-         steps {
-            echo "$GIT_BRANCH"
-         }
-           node {
-                            script {
-
+        stage('Begin Build') {
+            steps {
+                script {
+                    node{
+                        echo "$GIT_BRANCH"
                         sh "mkdir -p output"
                         writeFile(file: "output/usefulfile.txt", text: "This file is useful, need to archive it.")
-                            }
-           }
-      }
+                    }
+  
+                }
+            }
+        }
+   
     }
  }
