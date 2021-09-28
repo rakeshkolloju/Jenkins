@@ -22,22 +22,33 @@
 //     sh "docker ps"
 // }
 
- pipeline {
-   agent any
+//  pipeline {
+//    agent any
 
-   stages {
-        stage('Begin Build') {
-            steps {
-                script {
-                    node{
-                        echo "$GIT_BRANCH"
-                        sh "mkdir -p output"
-                        writeFile file: "output/test.txt", text: "asarchive it."
-                    }
+//    stages {
+//         stage('Begin Build') {
+//             steps {
+//                 script {
+//                     node{
+//                         echo "$GIT_BRANCH"
+//                         sh "mkdir -p output"
+//                         writeFile file: "output/test.txt", text: "asarchive it."
+//                     }
   
-                }
-            }
-        }
+//                 }
+//             }
+//         }
    
+//     }
+//  }
+node {
+    checkout scm
+
+    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
+
+        def customImage = docker.build("rk-image:${env.BUILD_ID}")
+
+        /* Push the container to the custom Registry */
+        customImage.push()
     }
- }
+}
